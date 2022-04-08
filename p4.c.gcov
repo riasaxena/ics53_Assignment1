@@ -1,0 +1,84 @@
+        -:    0:Source:p4.c
+        -:    0:Graph:p4.gcno
+        -:    0:Data:p4.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include <stdio.h>
+        -:    2:#include <string.h>
+        -:    3:#include <stdlib.h>
+        1:    4:int inDatabase(int id_number, int car_id[]){
+        1:    5:    int index_v = -1;
+        -:    6:    int i; 
+       11:    7:    for(i = 0; i < 10; i++){
+       10:    8:        if (car_id[i] == id_number){
+    #####:    9:            index_v = i; 
+    #####:   10:            break; 
+        -:   11:        }
+        -:   12:    }
+        -:   13:
+        1:   14:    return index_v;
+        -:   15:}
+        1:   16:int main(){
+        1:   17:    char input[20] = "";
+        1:   18:    int car_number[10] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+        1:   19:    float miles[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        1:   20:    int avaiable_slot = 0;
+        4:   21:    while (strncmp(input, "quit", 4) != 0){
+        2:   22:        printf("> ");
+        2:   23:        fgets(input, 20, stdin);
+        2:   24:        if (strncmp(input, "AddCar", 6) == 0){
+        -:   25:            
+        1:   26:            char id_number[strlen(input) - 6];
+        1:   27:            strncpy(id_number, &input[6], (strlen(input) - 6)); 
+        1:   28:            if (inDatabase(atoi(id_number), car_number) == -1){
+        1:   29:                car_number[avaiable_slot] = atoi(id_number);
+        1:   30:                avaiable_slot = avaiable_slot + 1;
+        -:   31:            }
+        -:   32:            else{
+    #####:   33:                printf("Error! Car with ID %d already exists in the database.\n",atoi(id_number) );
+        -:   34:            }
+        -:   35:
+        -:   36:        }
+        1:   37:        else if ((strncmp(input, "AddTrip", 7) == 0)){
+        -:   38:            int second_space; 
+        -:   39:            int i;
+    #####:   40:            for (i = 1; i < strlen(input) - 7; i++){
+    #####:   41:                if (input[i+7] == ' '){
+    #####:   42:                    second_space = i+7;
+    #####:   43:                    break;
+        -:   44:                }
+        -:   45:            }
+    #####:   46:            char id_number[second_space-7];
+    #####:   47:            strncpy(id_number, &input[7], (second_space-7)); 
+    #####:   48:            int valid = inDatabase(atoi(id_number), car_number);
+    #####:   49:            if(valid != -1){
+    #####:   50:                char miles_driven[strlen(input) - second_space];
+    #####:   51:                strncpy(miles_driven, &input[second_space], (strlen(input) - second_space)); 
+    #####:   52:                miles[valid] = miles[valid] + atof(miles_driven);
+        -:   53:            }
+        -:   54:            else{
+    #####:   55:                printf("Error! Car with ID %d doesn’t exist in the database.\n",atoi(id_number));
+        -:   56:            }
+        -:   57:        }
+        1:   58:        else if ((strncmp(input, "Display", 7) == 0)){
+        -:   59:            int i;
+    #####:   60:            for (i = 0; i < 10; i++){
+    #####:   61:                if(car_number[i] != -1){
+    #####:   62:                    printf("%d\t%0.1f\n", car_number[i], miles[i]);
+        -:   63:                }     
+        -:   64:            }
+        -:   65:        }
+        1:   66:        else if (strncmp(input, "Reset", 5) == 0){
+        -:   67:            
+    #####:   68:            char id_number[strlen(input) - 5];
+    #####:   69:            strncpy(id_number, &input[6], (strlen(input) - 5)); 
+    #####:   70:            int car_id = inDatabase(atoi(id_number), car_number);
+    #####:   71:            if (car_id != -1){
+    #####:   72:                miles[car_id] = 0.0;
+        -:   73:            }
+        -:   74:
+        -:   75:        }
+        -:   76:    }
+        -:   77:    
+        1:   78:    return 0; 
+        -:   79:}
